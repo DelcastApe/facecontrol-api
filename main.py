@@ -76,7 +76,7 @@ async def registrar_persona(
     file: UploadFile = File(...),
     nombre: str = Form(...),
     apellidos: str = Form(...),
-    requisitoriado: bool = Form(...) # ¡CORREGIDO: Usamos 'requisitOriado' como la columna booleana!
+    requisitoriado: bool = Form(...) # ¡CORREGIDO AQUÍ: 'requisitoriado' en minúsculas!
 ):
     try:
         contents = await file.read()
@@ -124,7 +124,7 @@ async def registrar_persona(
             "apellidos": apellidos,
             "kp": new_person_encoding, # Guardamos el encoding
             "foto": foto_url, # Guardamos la URL de la foto
-            "requisitoriado": requisitoriado # ¡CORREGIDO: Guardamos el estado de requisitoriado!
+            "requisitoriado": requisitoriado # ¡CORREGIDO AQUÍ: 'requisitoriado' en minúsculas!
         }).execute()
 
         if response_db.data:
@@ -137,7 +137,7 @@ async def registrar_persona(
         print(f"Error general en registrar_persona: {e}")
         return JSONResponse(status_code=500, content={"error": str(e)})
 
-# ✅ Endpoint para reconocer un rostro (modificado para 'requisitOriado')
+# ✅ Endpoint para reconocer un rostro (modificado para 'requisitoriado')
 @app.post("/reconocer")
 async def reconocer_rostro(file: UploadFile = File(...)):
     try:
@@ -154,8 +154,8 @@ async def reconocer_rostro(file: UploadFile = File(...)):
 
         encoding_actual = face_encodings[0]
 
-        # Seleccionamos también la columna 'requisitOriado'
-        personas = supabase.table("personas").select("id, nombre, apellidos, kp, requisitOriado").execute() # ¡CORREGIDO!
+        # Seleccionamos también la columna 'requisitoriado'
+        personas = supabase.table("personas").select("id, nombre, apellidos, kp, requisitoriado").execute() # ¡CORREGIDO AQUÍ!
         matches = []
 
         for persona in personas.data:
@@ -180,11 +180,11 @@ async def reconocer_rostro(file: UploadFile = File(...)):
                     "id": persona["id"],
                     "nombre": persona["nombre"],
                     "apellidos": persona["apellidos"],
-                    "requisitOriado": persona.get("requisitOriado", False) # ¡CORREGIDO!
+                    "requisitoriado": persona.get("requisitoriado", False) # ¡CORREGIDO AQUÍ!
                 })
                 
                 # ¡SIMULACIÓN DE ALERTA A LA POLICÍA!
-                if persona.get("requisitOriado", False): # ¡CORREGIDO!
+                if persona.get("requisitoriado", False): # ¡CORREGIDO AQUÍ!
                     print(f"\n🚨🚨 ALERTA DE SEGURIDAD 🚨🚨")
                     print(f"¡PERSONA REQUISITORIADA DETECTADA!: {persona['nombre']} {persona['apellidos']} (ID: {persona['id']})")
                     print(f"Fecha: {datetime.now().isoformat()}\n")
