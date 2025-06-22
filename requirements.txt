@@ -5,3 +5,5 @@ supabase
 face_recognition
 python-multipart
 numpy
+fpdf
+requests
